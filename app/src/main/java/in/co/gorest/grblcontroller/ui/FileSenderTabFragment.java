@@ -393,16 +393,39 @@ public class FileSenderTabFragment extends BaseFragment implements View.OnClickL
             }
         }
 
-        new MaterialFilePicker()
-                .withActivity(getActivity())
-                .withCloseMenu(true)
-                .withRequestCode(Constants.FILE_PICKER_REQUEST_CODE)
-                .withHiddenFiles(false)
-                .withFilter(Pattern.compile(Constants.SUPPORTED_FILE_TYPES_STRING, Pattern.CASE_INSENSITIVE))
-                .withTitle(GrblUtils.implode(" | ", Constants.SUPPORTED_FILE_TYPES))
-                .withPath(rootPath)
-                .start();
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            if (!Environment.isExternalStorageManager()) {
+                try {
+                    Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+                    intent.setData(Uri.parse("package:" + getContext().getPackageName()));
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Intent intent = new Intent();
+                    intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
+                    startActivity(intent);
+                }
+            } else {
+                new MaterialFilePicker()
+                        .withActivity(getActivity())
+                        .withCloseMenu(true)
+                        .withRequestCode(Constants.FILE_PICKER_REQUEST_CODE)
+                        .withHiddenFiles(false)
+                        .withFilter(Pattern.compile(Constants.SUPPORTED_FILE_TYPES_STRING, Pattern.CASE_INSENSITIVE))
+                        .withTitle(GrblUtils.implode(" | ", Constants.SUPPORTED_FILE_TYPES))
+                        .withPath(rootPath)
+                        .start();
+            }
+        } else {
+            new MaterialFilePicker()
+                        .withActivity(getActivity())
+                        .withCloseMenu(true)
+                        .withRequestCode(Constants.FILE_PICKER_REQUEST_CODE)
+                        .withHiddenFiles(false)
+                        .withFilter(Pattern.compile(Constants.SUPPORTED_FILE_TYPES_STRING, Pattern.CASE_INSENSITIVE))
+                        .withTitle(GrblUtils.implode(" | ", Constants.SUPPORTED_FILE_TYPES))
+                        .withPath(rootPath)
+                        .start();
+        }
     }
 
     private Boolean hasExternalStorageReadPermission(){
