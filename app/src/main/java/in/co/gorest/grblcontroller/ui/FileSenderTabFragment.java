@@ -402,7 +402,7 @@ public class FileSenderTabFragment extends BaseFragment implements View.OnClickL
                     Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
                     intent.setData(Uri.parse("package:" + getContext().getPackageName()));
                     startActivity(intent);
-                } catch (Exception e) {
+                } catch (ActivityNotFoundException e) {
                     Intent intent = new Intent();
                     intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
                     startActivity(intent);
